@@ -1,0 +1,27 @@
+{
+  "name": "todo",
+  "version": "1.0.0",
+  "description": "Simple todo cli",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.falcon.zone/constantin/todo.git"
+  },
+  "keywords": [
+    "todo",
+    "cli"
+  ],
+  "author": "Constantin Druc",
+  "license": "ISC",
+  "dependencies": {
+    "sift": "^2.0.9",
+    "tty-table": "^1.0.6",
+    "chalk": "^1.1.1"
+  },
+  "bin": {
+    "todo": "todo"
+  }
+}

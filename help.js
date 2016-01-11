@@ -1,0 +1,12 @@
+module.exports = "A lightweight CLI that helps you manage todos."
+        + "\n" + ""
+        + "\n" + "usage: todo [command] <id>"
+        + "\n" + ""
+        + "\n" + "[command]"
+        + "\n" + "  create <todo>           Creates a new todo. Example: `todo create \"Fix signup form validation.\"`"
+        + "\n" + "  close <id>              Marks todo as closed"
+        + "\n" + "  reopen <id>             Marks todo as opened"
+        + "\n" + "  closed                  Lists closed todos."
+        + "\n" + "  opened                  Lists opened todos."
+        + "\n" + "  clear                   Deletes all todos and the storage file"
+        + "\n" + "  help                    Prints this help.";
