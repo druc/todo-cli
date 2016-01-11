@@ -1,8 +1,8 @@
 {
   "name": "todo-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight CLI that helps you manage todos",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,6 +22,6 @@
     "chalk": "1.1.1"
   },
   "bin": {
-    "todo": "todo"
+    "todo": "bin/todo"
   }
 }
