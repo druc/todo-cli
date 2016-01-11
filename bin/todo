@@ -6,10 +6,10 @@ var chalk = require('chalk');
 
 function display(arr) {
     if (!arr.length) {
-        return console.log(chalk.red("No todos fetched."));
+        return console.log(chalk.red("No todos."));
     }
 
-    var data = [];
+    var data = [], i, c;
     for (i = 0; i < arr.length; ++i) {
         c = arr[i];
         data.push([c.id + 1, c.todo, c.date, c.state]);
