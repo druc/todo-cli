@@ -1,25 +1,25 @@
 {
   "name": "todo",
   "version": "1.0.0",
-  "description": "Simple todo cli",
+  "description": "A lightweight CLI that helps you manage todos",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://git.falcon.zone/constantin/todo.git"
+    "url": "https://github.com/druc/todo-cli.git"
   },
   "keywords": [
     "todo",
     "cli"
   ],
   "author": "Constantin Druc",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "sift": "^2.0.9",
-    "tty-table": "^1.0.6",
-    "chalk": "^1.1.1"
+    "sift": "2.0.9",
+    "tty-table": "1.0.6",
+    "chalk": "1.1.1"
   },
   "bin": {
     "todo": "todo"

@@ -1,0 +1,121 @@
+#!/usr/bin/env node
+
+var TodoContainer = require("TODO");
+var Table = require('tty-table');
+var chalk = require('chalk');
+var display = function(arr) {
+    if (!arr.length) {
+            return console.log(chalk.red("No todos fetched."));
+        }
+
+        var data = [];
+        for (i = 0; i < arr.length; ++i) {
+            c = arr[i];
+            data.push([c.id + 1, c.todo, c.date, c.state]);
+        }
+
+        var header = [{
+            value: chalk.bold("Id"),
+            width: 4
+        }, {
+            value: chalk.bold("Todo"),
+            width: 70,
+            align: "left",
+        }, {
+            value: chalk.bold("Date"),
+        }, {
+            value: chalk.bold("Status"),
+            width: 8,
+            formatter: function(value) {
+                if (value == 'OPEN') {
+                    value = chalk.green(value);
+                } else {
+                    value = chalk.red(value);
+                }
+
+                return value;
+            }
+        }];
+
+        var table = Table(header, data, {
+            borderStyle: 1,
+            paddingBottom: 0,
+            align: "center",
+            color: "white",
+            headerColor: "cyan"
+        });
+
+
+        console.log(table.render());
+}
+
+var todo = new TodoContainer(function(err) {
+    if (err) {
+        return console.log(err);
+    }
+    var commands = {
+        create: function() {
+            if (process.argv[3]) {
+                todo.create(process.argv[3]);
+                todo.save();
+            } else {
+                console.log(chalk.red('Pass in some content'));
+            }
+        },
+        list: function(callback) {
+            todo.filter({}, callback);
+        },
+        opened: function(callback) {
+            var filter = {
+                "state": "OPEN"
+            };
+            todo.filter(filter, callback);
+        },
+        all: function(callback) {
+            var filter = {};
+            todo.filter(filter, callback);
+        },
+        closed: function(callback) {
+            var filter = JSON.parse("{ \"state\": \"CLOSED\" }");
+            todo.filter(filter, callback);
+        },
+        reopen: function() {
+            if (parseInt(process.argv[3], 10)) {
+                todo.reopen(process.argv[3]);
+                todo.save();
+            } else {
+                console.log(chalk.red('Pass in a todo id'));
+            }
+        },
+        help: function() {
+            console.log(require("./help"));
+        },
+        close: function() {
+            if (parseInt(process.argv[3], 10)) {
+                todo.close(process.argv[3]);
+                todo.save();
+            } else {
+                console.log(chalk.red('Pass in a todo id'));
+            }
+        },
+        clear: function() {
+            todo.clear();
+        }
+    };
+
+    if (!commands[process.argv[2]]) {
+        process.argv[2] = "opened";
+    }
+
+    commands[process.argv[2]](function(err, res) {
+        if (err) {
+            return console.log(err);
+        }
+
+        if (typeof res === "string") {
+            return console.log(res);
+        }
+
+        display(res);
+    });
+});
