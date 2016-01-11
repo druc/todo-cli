@@ -3,50 +3,51 @@
 var TodoContainer = require("TODO");
 var Table = require('tty-table');
 var chalk = require('chalk');
-var display = function(arr) {
+
+function display(arr) {
     if (!arr.length) {
-            return console.log(chalk.red("No todos fetched."));
-        }
+        return console.log(chalk.red("No todos fetched."));
+    }
 
-        var data = [];
-        for (i = 0; i < arr.length; ++i) {
-            c = arr[i];
-            data.push([c.id + 1, c.todo, c.date, c.state]);
-        }
+    var data = [];
+    for (i = 0; i < arr.length; ++i) {
+        c = arr[i];
+        data.push([c.id + 1, c.todo, c.date, c.state]);
+    }
 
-        var header = [{
-            value: chalk.bold("Id"),
-            width: 4
-        }, {
-            value: chalk.bold("Todo"),
-            width: 70,
-            align: "left",
-        }, {
-            value: chalk.bold("Date"),
-        }, {
-            value: chalk.bold("Status"),
-            width: 8,
-            formatter: function(value) {
-                if (value == 'OPEN') {
-                    value = chalk.green(value);
-                } else {
-                    value = chalk.red(value);
-                }
-
-                return value;
+    var header = [{
+        value: chalk.bold("Id"),
+        width: 4
+    }, {
+        value: chalk.bold("Todo"),
+        width: 70,
+        align: "left",
+    }, {
+        value: chalk.bold("Date"),
+    }, {
+        value: chalk.bold("Status"),
+        width: 8,
+        formatter: function(value) {
+            if (value == 'OPEN') {
+                value = chalk.green(value);
+            } else {
+                value = chalk.red(value);
             }
-        }];
 
-        var table = Table(header, data, {
-            borderStyle: 1,
-            paddingBottom: 0,
-            align: "center",
-            color: "white",
-            headerColor: "cyan"
-        });
+            return value;
+        }
+    }];
+
+    var table = Table(header, data, {
+        borderStyle: 1,
+        paddingBottom: 0,
+        align: "center",
+        color: "white",
+        headerColor: "cyan"
+    });
 
 
-        console.log(table.render());
+    console.log(table.render());
 }
 
 var todo = new TodoContainer(function(err) {
