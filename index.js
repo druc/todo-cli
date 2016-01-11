@@ -8,8 +8,8 @@ var TODO = function(callback) {
     var self = this;
 
     callback = callback || function(error) {
-        if (error) throw error;
-    }
+            if (error) throw error;
+        }
 
     if (Fs.existsSync(STORAGE_PATH)) {
         self.list(function(error, todos) {
@@ -22,7 +22,7 @@ var TODO = function(callback) {
     } else {
         self.todos = [];
         self.save(callback);
-        console.log(chalk.red("No todos fetched. Prepared storage though..."));
+        console.log(chalk.red("No todos fetched. Prepared storage though.."));
     };
 
     return self;
