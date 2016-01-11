@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var TodoContainer = require("TODO");
+var TodoContainer = require("../lib");
 var Table = require('tty-table');
 var chalk = require('chalk');
 
