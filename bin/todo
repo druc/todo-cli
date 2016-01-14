@@ -6,7 +6,7 @@ var chalk = require('chalk');
 
 function display(arr) {
     if (!arr.length) {
-        return console.log(chalk.red("No todos."));
+        return console.log(chalk.red("No opened todos."));
     }
 
     var data = [], i, c;
@@ -60,7 +60,7 @@ var todo = new TodoContainer(function(err) {
                 todo.create(process.argv[3]);
                 todo.save();
             } else {
-                console.log(chalk.red('Pass in some content'));
+                console.log(chalk.red("Todo can't be empty!. Ex: todo create \"This is my todo\" "));
             }
         },
         list: function(callback) {
@@ -81,23 +81,29 @@ var todo = new TodoContainer(function(err) {
             todo.filter(filter, callback);
         },
         reopen: function() {
-            if (parseInt(process.argv[3], 10)) {
+            if (process.argv[3] == 'all') {
+                todo.reopenAll();
+            } else if (parseInt(process.argv[3], 10)) {
                 todo.reopen(process.argv[3]);
-                todo.save();
             } else {
                 console.log(chalk.red('Pass in a todo id'));
             }
+
+            todo.save();
         },
         help: function() {
             console.log(require("./help"));
         },
         close: function() {
-            if (parseInt(process.argv[3], 10)) {
+            if (process.argv[3] == 'all') {
+                todo.closeAll();
+            } else if (parseInt(process.argv[3], 10)) {
                 todo.close(process.argv[3]);
-                todo.save();
             } else {
                 console.log(chalk.red('Pass in a todo id'));
             }
+
+            todo.save();
         },
         clear: function() {
             todo.clear();
