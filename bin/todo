@@ -6,7 +6,7 @@ var chalk = require('chalk');
 
 function display(arr) {
     if (!arr.length) {
-        return console.log(chalk.red("No opened todos."));
+        return console.log(chalk.red("No todos."));
     }
 
     var data = [], i, c;
@@ -92,7 +92,7 @@ var todo = new TodoContainer(function(err) {
             todo.save();
         },
         help: function() {
-            console.log(require("./help"));
+            console.log(require("../help.js"));
         },
         close: function() {
             if (process.argv[3] == 'all') {
