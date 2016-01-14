@@ -1,6 +1,6 @@
 {
   "name": "todo-cli",
-  "version": "1.0.9",
+  "version": "1.1.1",
   "description": "A lightweight CLI that helps you manage todos",
   "main": "lib/index.js",
   "scripts": {
