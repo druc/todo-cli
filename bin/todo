@@ -65,7 +65,7 @@ var todo = new TodoContainer(function(err) {
       });
 
       return argument;
-    }
+    };
 
     var commands = {
         create: function() {
