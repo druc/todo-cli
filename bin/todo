@@ -46,7 +46,6 @@ function display(arr) {
         headerColor: "cyan"
     });
 
-
     console.log(table.render());
 }
 
@@ -73,7 +72,7 @@ var todo = new TodoContainer(function(err) {
                 todo.create(process.argv[3]);
                 todo.save();
             } else {
-                console.log(chalk.red("Todo can't be empty!. Ex: todo create \"This is my todo\" "));
+                console.log(chalk.red("Todo can't be empty! Ex: todo create \"This is my todo\" "));
             }
         },
         list: function(callback) {
@@ -83,10 +82,6 @@ var todo = new TodoContainer(function(err) {
             var filter = {
                 "state": "OPEN"
             };
-            todo.filter(filter, callback);
-        },
-        all: function(callback) {
-            var filter = {};
             todo.filter(filter, callback);
         },
         closed: function(callback) {
