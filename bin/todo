@@ -27,7 +27,7 @@ function display(arr) {
     }, {
         value: chalk.bold("Status"),
         width: 8,
-        formatter: function(value) {
+        formatter: function (value) {
             if (value == 'OPEN') {
                 value = chalk.green(value);
             } else {
@@ -49,25 +49,25 @@ function display(arr) {
     console.log(table.render());
 }
 
-var todo = new TodoContainer(function(err) {
+var todo = new TodoContainer(function (err) {
     if (err) {
         return console.log(err);
     }
 
-    var getTodoArgument = function(processArguments) {
-      var argument = processArguments.length > 3 ? processArguments[3] : null;
+    var getTodoArgument = function (processArguments) {
+        var argument = processArguments.length > 3 ? processArguments[3] : null;
 
-      processArguments.forEach(function(segment, index) {
-        if (index > 3) {
-          argument += segment;
-        }
-      });
+        processArguments.forEach(function (segment, index) {
+            if (index > 3) {
+                argument += segment;
+            }
+        });
 
-      return argument;
+        return argument;
     };
 
     var commands = {
-        create: function() {
+        create: function () {
             if (process.argv[3]) {
                 todo.create(process.argv[3]);
                 todo.save();
@@ -75,20 +75,20 @@ var todo = new TodoContainer(function(err) {
                 console.log(chalk.red("Todo can't be empty! Ex: todo create \"This is my todo\" "));
             }
         },
-        list: function(callback) {
+        list: function (callback) {
             todo.filter({}, callback);
         },
-        opened: function(callback) {
+        opened: function (callback) {
             var filter = {
                 "state": "OPEN"
             };
             todo.filter(filter, callback);
         },
-        closed: function(callback) {
+        closed: function (callback) {
             var filter = JSON.parse("{ \"state\": \"CLOSED\" }");
             todo.filter(filter, callback);
         },
-        reopen: function() {
+        reopen: function () {
             var todos = getTodoArgument(process.argv);
             if (todos == 'all') {
                 todo.reopenAll();
@@ -100,10 +100,10 @@ var todo = new TodoContainer(function(err) {
 
             todo.save();
         },
-        help: function() {
+        help: function () {
             console.log(require("../help.js"));
         },
-        close: function() {
+        close: function () {
             var todos = getTodoArgument(process.argv);
 
             if (todos == 'all') {
@@ -116,7 +116,7 @@ var todo = new TodoContainer(function(err) {
 
             todo.save();
         },
-        clear: function() {
+        clear: function () {
             todo.clear();
         }
     };
@@ -125,7 +125,7 @@ var todo = new TodoContainer(function(err) {
         process.argv[2] = "opened";
     }
 
-    commands[process.argv[2]](function(err, res) {
+    commands[process.argv[2]](function (err, res) {
         if (err) {
             return console.log(err);
         }
