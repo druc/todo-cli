@@ -95,10 +95,18 @@ var todo = new TodoContainer(function(err) {
             console.log(require("../help.js"));
         },
         close: function() {
-            if (process.argv[3] == 'all') {
+            var argument = process.argv[3];
+
+            process.argv.forEach(function(segment, index) {
+              if (index > 3) {
+                argument += segment;
+              }
+            });
+
+            if (argument == 'all') {
                 todo.closeAll();
-            } else if (parseInt(process.argv[3], 10)) {
-                todo.close(process.argv[3]);
+            } else if (parseInt(argument, 10)) {
+                todo.close(argument);
             } else {
                 console.log(chalk.red('Pass in a todo id'));
             }
