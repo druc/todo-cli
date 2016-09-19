@@ -15,7 +15,7 @@ A lightweight CLI that helps you manage todos in a given project.
 `todo create <todo>` - creates a new todo. Example: `todo create "Fix signup form validation."`  
 `todo close <todoId_1,todoId_2, todoId_3...>` - marks a todo(s) as closed.  
 `todo close all` - close all todos    
-`todo reopen <todoId_1,todoId_2, todoId_3...>` - reopens closed todo(s).
+`todo reopen <todoId_1,todoId_2, todoId_3...>` - reopens closed todo(s).  
 `todo reopen all` - reopen all todos    
 `todo closed` - lists closed todos  
 `todo opened` - lists opened todos  
