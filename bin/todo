@@ -20,30 +20,37 @@ function display(arr) {
         width: 4
     }, {
         value: chalk.bold("Todo"),
-        width: 70,
+        width: 60,
         align: "left",
     }, {
         value: chalk.bold("Date"),
+        align: "left",
+        paddingLeft: 2,
+        width: 23,
+        formatter: function (value) {
+            return value;
+        }
     }, {
         value: chalk.bold("Status"),
-        width: 8,
+        align: "left",
+        width: 10,
         formatter: function (value) {
-            if (value == 'OPEN') {
-                value = chalk.green(value);
-            } else {
-                value = chalk.red(value);
+            if (value === 'OPEN') {
+               return chalk.green(value);
             }
 
-            return value;
+            return chalk.red(value);
         }
     }];
 
     var table = Table(header, data, {
-        borderStyle: 1,
+        borderStyle: 0,
         paddingBottom: 0,
         align: "center",
         color: "white",
-        headerColor: "cyan"
+        headerColor: "cyan",
+        headerAlign: 'left',
+        borderColor: "grey",
     });
 
     console.log(table.render());
