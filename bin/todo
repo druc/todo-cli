@@ -4,56 +4,91 @@ var TodoContainer = require("../lib");
 var Table = require('tty-table');
 var chalk = require('chalk');
 
-function display(arr) {
-    if (!arr.length) {
-        return console.log(chalk.red("No todos."));
-    }
-
-    var data = [], i, c;
-    for (i = 0; i < arr.length; ++i) {
-        c = arr[i];
-        data.push([c.id + 1, c.todo, c.date, c.state]);
-    }
-
-    var header = [{
-        value: chalk.bold("Id"),
-        width: 4
-    }, {
-        value: chalk.bold("Todo"),
-        width: 70,
-        align: "left",
-    }, {
-        value: chalk.bold("Date"),
-    }, {
-        value: chalk.bold("Status"),
-        width: 8,
-        formatter: function (value) {
-            if (value == 'OPEN') {
-                value = chalk.green(value);
-            } else {
-                value = chalk.red(value);
-            }
-
-            return value;
-        }
-    }];
-
-    var table = Table(header, data, {
-        borderStyle: 1,
-        paddingBottom: 0,
-        align: "center",
-        color: "white",
-        headerColor: "cyan"
-    });
-
-    console.log(table.render());
-}
+/**
+ * @param message
+ */
+var render = function (message) {
+    console.log(message);
+};
 
 var todo = new TodoContainer(function (err) {
     if (err) {
-        return console.log(err);
+        return render(err);
     }
 
+    /**
+     *
+     * @type {{headerColor: string, openedTodoColor: string, closedTodoColor: string, todoTitle: string, set: set, get: get}}
+     */
+    var mainOptions = {
+        headerColor: '#11643b',
+        openedTodoColor: '#595959',
+        closedTodoColor: '#ac6a5b',
+        todoTitle: 'Opened todos',
+        set: function (option, val) {
+            this[option] = val;
+        },
+        get: function (option) {
+            if (!mainOptions.hasOwnProperty(option)) return null;
+            return this[option];
+        }
+    };
+
+    /**
+     * @param todoArray
+     * @return {Array}
+     */
+    var getParsedTodos = function (todoArray) {
+        var data = [], i, todo, color;
+        for (i = 0; i < todoArray.length; ++i) {
+            todo = todoArray[i];
+            color = todo.state === 'OPEN' ? mainOptions.get('openedTodoColor') : mainOptions.get('closedTodoColor');
+            data.push(
+                [
+                    chalk.hex(color).dim(todo.id + 1),
+                    chalk.hex(color).dim(todo.todo)
+                ]
+            );
+        }
+        return data;
+    };
+
+    /**
+     *
+     * @param todoArray
+     */
+    var renderTable = function (todoArray) {
+        if (!todoArray.length) {
+            return render(chalk.red("No todos."));
+        }
+
+        var tableHeaderOptions = [{
+            value: chalk.hex(mainOptions.get('headerColor')).dim('Id'),
+            paddingLeft: 1,
+            paddingRight: 1,
+            width: 5
+        }, {
+            value: chalk.hex(mainOptions.get('headerColor')).dim(mainOptions.get('todoTitle')),
+            width: 80,
+            paddingLeft: 1,
+            paddingRight: 1,
+            align: "left"
+        }];
+
+        var tableOptions = {
+            borderStyle: 1,
+            borderColor: 'grey',
+            headerColor: "cyan",
+            headerAlign: 'left'
+        };
+
+        render(Table(tableHeaderOptions, getParsedTodos(todoArray), tableOptions).render());
+    };
+
+    /**
+     * @param processArguments
+     * @return argument
+     */
     var getTodoArgument = function (processArguments) {
         var argument = processArguments.length > 3 ? processArguments[3] : null;
 
@@ -66,52 +101,55 @@ var todo = new TodoContainer(function (err) {
         return argument;
     };
 
+    /**
+     * @type {{create: create, list: list, opened: opened, closed: closed, reopen: reopen, help: help, close: close, clear: clear}}
+     */
     var commands = {
         create: function () {
-            if (process.argv[3]) {
-                todo.create(process.argv[3]);
-                todo.save();
-            } else {
-                console.log(chalk.red("Todo can't be empty! Ex: todo create \"This is my todo\" "));
+            if (!process.argv[3]) {
+                return render(chalk.hex('#84312c').dim("Todo can't be empty! Ex: todo create \"This is my todo\" "));
             }
+
+            todo.create(process.argv[3]);
+            todo.save();
         },
         list: function (callback) {
+            mainOptions.set('todoTitle', 'All todos');
             todo.filter({}, callback);
         },
         opened: function (callback) {
-            var filter = {
-                "state": "OPEN"
-            };
-            todo.filter(filter, callback);
+            todo.filter({"state": "OPEN"}, callback);
         },
         closed: function (callback) {
+            mainOptions.set('headerColor', '#84312c');
+            mainOptions.set('todoTitle', 'Closed todos');
             var filter = JSON.parse("{ \"state\": \"CLOSED\" }");
             todo.filter(filter, callback);
         },
         reopen: function () {
             var todos = getTodoArgument(process.argv);
-            if (todos == 'all') {
+            if (todos === 'all') {
                 todo.reopenAll();
             } else if (parseInt(todos, 10)) {
                 todo.reopen(todos);
             } else {
-                console.log(chalk.red('Pass in a todo id'));
+                render(chalk.red('Pass in a todo id'));
             }
 
             todo.save();
         },
         help: function () {
-            console.log(require("../help.js"));
+            render(require("../help.js"));
         },
         close: function () {
             var todos = getTodoArgument(process.argv);
 
-            if (todos == 'all') {
+            if (todos === 'all') {
                 todo.closeAll();
             } else if (parseInt(todos, 10)) {
                 todo.close(todos);
             } else {
-                console.log(chalk.red('Pass in a todo id'));
+                render(chalk.red('Pass in a todo id'));
             }
 
             todo.save();
@@ -121,19 +159,23 @@ var todo = new TodoContainer(function (err) {
         }
     };
 
-    if (!commands[process.argv[2]]) {
+    if (!commands.hasOwnProperty(process.argv[2]) && typeof (process.argv[2]) !== 'undefined') {
+        process.argv[3] = process.argv[2];
+        process.argv[2] = "create";
+    } else if (!process.argv[2]) {
         process.argv[2] = "opened";
     }
 
     commands[process.argv[2]](function (err, res) {
+
         if (err) {
-            return console.log(err);
+            return render(err);
         }
 
         if (typeof res === "string") {
-            return console.log(res);
+            return render(res);
         }
 
-        display(res);
+        renderTable(res);
     });
 });
