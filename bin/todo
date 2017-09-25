@@ -17,12 +17,9 @@ var todo = new TodoContainer(function (err) {
     }
 
     /**
-     *
-     * @type {{headerColor: string, openedTodoColor: string, closedTodoColor: string, todoTitle: string, set: set, get: get}}
+     * @type {{closedTodoColor: string, todoTitle: string, set: set, get: get}}
      */
     var mainOptions = {
-        headerColor: '#11643b',
-        openedTodoColor: '#595959',
         closedTodoColor: '#ac6a5b',
         todoTitle: 'Opened todos',
         set: function (option, val) {
@@ -39,14 +36,15 @@ var todo = new TodoContainer(function (err) {
      * @return {Array}
      */
     var getParsedTodos = function (todoArray) {
-        var data = [], i, todo, color;
+        var data = [], i, todo;
         for (i = 0; i < todoArray.length; ++i) {
             todo = todoArray[i];
-            color = todo.state === 'OPEN' ? mainOptions.get('openedTodoColor') : mainOptions.get('closedTodoColor');
+            todo.todo = todo.state === 'CLOSED' ? chalk.hex(mainOptions.get('closedTodoColor')).dim(todo.todo) : todo.todo;
+            todo.id = todo.state === 'CLOSED' ? chalk.hex(mainOptions.get('closedTodoColor')).dim(todo.id + 1) : todo.id + 1;
             data.push(
                 [
-                    chalk.hex(color).dim(todo.id + 1),
-                    chalk.hex(color).dim(todo.todo)
+                    todo.id,
+                    todo.todo
                 ]
             );
         }
@@ -63,12 +61,12 @@ var todo = new TodoContainer(function (err) {
         }
 
         var tableHeaderOptions = [{
-            value: chalk.hex(mainOptions.get('headerColor')).dim('Id'),
+            value: 'Id',
             paddingLeft: 1,
             paddingRight: 1,
             width: 5
         }, {
-            value: chalk.hex(mainOptions.get('headerColor')).dim(mainOptions.get('todoTitle')),
+            value: mainOptions.get('todoTitle'),
             width: 80,
             paddingLeft: 1,
             paddingRight: 1,
@@ -77,8 +75,6 @@ var todo = new TodoContainer(function (err) {
 
         var tableOptions = {
             borderStyle: 1,
-            borderColor: 'grey',
-            headerColor: "cyan",
             headerAlign: 'left'
         };
 
@@ -121,7 +117,6 @@ var todo = new TodoContainer(function (err) {
             todo.filter({"state": "OPEN"}, callback);
         },
         closed: function (callback) {
-            mainOptions.set('headerColor', '#84312c');
             mainOptions.set('todoTitle', 'Closed todos');
             var filter = JSON.parse("{ \"state\": \"CLOSED\" }");
             todo.filter(filter, callback);
